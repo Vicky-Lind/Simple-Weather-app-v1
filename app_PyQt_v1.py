@@ -79,9 +79,13 @@ class mainWindow(QMainWindow):
         self.windLbl = QLabel(self, text='')
         self.windLbl.setGeometry(10, 400, 200, 30)
 
-        self.test = QLabel(self)
-        self.test.setStyleSheet("background-color: red;")
+        self.dragBarLbl = QLabel(self)
+        self.dragBarLbl.setStyleSheet("background-color: red;")
+        # self.dragBarLbl.setStyleSheet("background-color: rgba(255, 255, 255, 60);")
+        # self.dragBarLbl.setStyleSheet("border-radius: (17px);")
 
+        self.drag_start_pos = None
+        
     def get_weather(self, city):
         result = requests.get(url.format(city, api_key))
         # print(url.format(city, api_key))
@@ -129,18 +133,26 @@ class mainWindow(QMainWindow):
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
 
     
+    
     def mousePressEvent(self, event):
-        if self.test == Qt.MouseEventFlag.LeftButton:
+        if event.button() == Qt.LeftButton:
             try:
-                self.oldPos = event.globalPos()
-
-                delta = QPoint (event.globalPos() - self.oldPos)
-                self.move(self.x() + delta.x(), self.y() + delta.y())
-                self.oldPos = event.globalPos()
-
+                # Check if the mouse press position is within the label's boundaries
+                if self.dragBarLbl.geometry().contains(event.pos()):
+                    self.press_pos = event.globalPos()
+                    self.move_pos = QPoint(0, 0)
             except Exception as error:
-                print("nope")
-   
+                return None
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            try:
+                self.move_pos = event.globalPos() - self.press_pos
+                self.move(self.pos() + self.move_pos)
+                self.press_pos = event.globalPos()
+            except Exception as error:
+                return None
+
     def location_on_the_screen(self):
         ag = QDesktopWidget().availableGeometry()
         sg = QDesktopWidget().screenGeometry()
