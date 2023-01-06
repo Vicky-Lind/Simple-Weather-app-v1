@@ -1,0 +1,12 @@
+# Ignore weather_icons folder
+weather_icons/
+
+# Ignore config.ini
+.config.ini
+
+# Ignore randoms
+.minimize-sign_white.png
+.minimize-sign.png
+.remove.png
+.test-removebg.png
+.test.png
