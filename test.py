@@ -59,7 +59,7 @@ class mainWindow(QMainWindow):
         self.locationLbl.setGeometry(10, 60, 200, 30)
 
         self.image = QLabel(self)
-        self.image.setGeometry(10, 100, 20, 20)
+        self.image.setGeometry(10, 100, 70, 70)
         self.image.setAlignment(QtCore.Qt.AlignCenter)
 
         self.tempLbl = QLabel(self, text='')

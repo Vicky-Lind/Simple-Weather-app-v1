@@ -5,7 +5,7 @@ from datetime import date
 from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtCore import QUrl, QPoint
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtGui import QMovie, QIcon
+from PyQt5.QtGui import QMovie, QIcon, QPixmap
 from configparser import ConfigParser
 import requests
 
@@ -59,8 +59,7 @@ class mainWindow(QMainWindow):
         self.locationLbl.setGeometry(10, 60, 200, 30)
 
         self.image = QLabel(self)
-        self.image.setGeometry(10, 100, 20, 20)
-        self.image.setAlignment(QtCore.Qt.AlignCenter)
+        self.image.setGeometry(10, 100, 50, 50)
 
         self.tempLbl = QLabel(self, text='')
         self.tempLbl.setGeometry(10, 310, 200, 30)
@@ -76,7 +75,7 @@ class mainWindow(QMainWindow):
 
     def get_weather(self, city):
         result = requests.get(url.format(city, api_key))
-        print(url.format(city, api_key))
+        # print(url.format(city, api_key))
         
         if result:
             json = result.json()
@@ -85,11 +84,11 @@ class mainWindow(QMainWindow):
             country = json['sys']['country']
             temp_kelvin = json['main']['temp']
             temp_celsius = temp_kelvin - 273.15
-            # feels_like = json['main']['feels_like'] - 273.15
-            # wind = json['wind']['speed']
+            feels_like = json['main']['feels_like'] - 273.15
+            wind = json['wind']['speed']
             icon = json['weather'][0]['icon']
             weather = json['weather'][0]['main']
-            final = (city, country, temp_celsius, icon, weather)
+            final = (city, country, temp_celsius, feels_like, wind, icon, weather)
             return final
         else:
             print("Error while getting weather data")
@@ -106,20 +105,19 @@ class mainWindow(QMainWindow):
         #     self.feelsLikeLbl.setText(str(weather[3]) + '°C')
         #     self.windLbl.setText(str(weather[4]) + 'km/h')
         if weather:
-            self.locationLbl['text'] = '{}, {}'.format(weather[0], weather[1])
-            iconRef = QIcon('images/weather_icons/{}.png'.format(weather[4]))  
-            self.image['image'] = iconRef  
-            self.image.image = iconRef
+            self.locationLbl.setText('{}, {}'.format(weather[0], weather[1]))
+            pixmap = QPixmap('images/weather_icons/{}.png'.format(weather[4]))  
+            self.image.setPixmap(pixmap)
 
-            self.tempLbl['text'] = '{:.0f}°C'.format(weather[2])
+            self.tempLbl.setText('{:.0f}°C'.format(weather[2]))
             
-            # self.feelsLikeLbl['text'] = '{:.0f}°C'.format(weather[3])
+            self.feelsLikeLbl.setText('{:.0f}°C'.format(weather[3]))
             
-            # self.windLbl['text'] = '{:.0f}km/h'.format(weather[4])
+            self.windLbl.setText('{:.0f}km/h'.format(weather[4]))
 
-            self.weatherLbl['text'] = weather[6]    
+            self.weatherLbl.setText(weather[6])
         else:
-            QMessageBox.warning(self, "Error", "Cannot find city {}".format(city))
+            QMessageBox.warning(self, 'Error', "Cannot find city {}".format(city))
 
     def mousePressEvent(self, event):
         self.oldPos = event.globalPos()
