@@ -12,6 +12,7 @@ api_key = config['api_key']['key']
 
 def get_weather(city):
     result = requests.get(url.format(city, api_key))
+    print(url.format(city, api_key))
     if result:
         json = result.json()
         # (City, country, temp_celsius, temp_fahrenheit, icon, weather)
@@ -33,7 +34,7 @@ def search():
     weather = get_weather(city)
     if weather:
         location_lbl['text'] = '{}, {}'.format(weather[0], weather[1])
-        icon_ref = PhotoImage(file='weather_icons\{}.png'.format(weather[4]))
+        icon_ref = PhotoImage(file='images\weather_icons\{}.png'.format(weather[4]))
         image['image'] = icon_ref
         image.image = icon_ref
 

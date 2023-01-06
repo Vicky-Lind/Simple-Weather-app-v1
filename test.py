@@ -5,7 +5,7 @@ from datetime import date
 from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtCore import QUrl, QPoint
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtGui import QMovie, QIcon
+from PyQt5.QtGui import QMovie, QIcon, QPixmap
 from configparser import ConfigParser
 import requests
 
@@ -85,68 +85,29 @@ class mainWindow(QMainWindow):
             country = json['sys']['country']
             temp_kelvin = json['main']['temp']
             temp_celsius = temp_kelvin - 273.15
-            # feels_like = json['main']['feels_like'] - 273.15
-            # wind = json['wind']['speed']
+            temp_fahrenheit = (temp_kelvin - 273.15) * 9/5 + 32
             icon = json['weather'][0]['icon']
             weather = json['weather'][0]['main']
-            final = (city, country, temp_celsius, icon, weather)
+            final = (city, country, temp_celsius, temp_fahrenheit, icon, weather)
             return final
+
         else:
-            print("Error while getting weather data")
             return None
-        
     def search(self):
         city = self.cityEntry.text()
         weather = self.get_weather(city)
-        # if weather:
-        #     location = weather[0] + ', ' + weather[1]
-        #     self.locationLbl.setText(location)
-        #     self.tempLbl.setText(str(weather[2]) + '°C')
-        #     self.weatherLbl.setText(weather[6])
-        #     self.feelsLikeLbl.setText(str(weather[3]) + '°C')
-        #     self.windLbl.setText(str(weather[4]) + 'km/h')
         if weather:
-            self.locationLbl['text'] = '{}, {}'.format(weather[0], weather[1])
-            iconRef = QIcon('images/weather_icons/{}.png'.format(weather[4]))  
-            self.image['image'] = iconRef  
-            self.image.image = iconRef
+            self.locationLbl.setText('{}, {}'.format(weather[0], weather[1]))
+            pixmap = QPixmap('images/weather_icons/{}.png'.format(weather[4]))
+            self.image.setPixmap(pixmap)
 
-            self.tempLbl['text'] = '{:.0f}°C'.format(weather[2])
-            
-            # self.feelsLikeLbl['text'] = '{:.0f}°C'.format(weather[3])
-            
-            # self.windLbl['text'] = '{:.0f}km/h'.format(weather[4])
-
-            self.weatherLbl['text'] = weather[6]    
+            self.tempLbl.setText('{:.0f}°C'.format(weather[2]))
+            self.weatherLbl.setText(weather[5])
         else:
-            QMessageBox.warning(self, "Error", "Cannot find city {}".format(city))
+            QMessageBox.warning(self, 'Error', "Cannot find city {}".format(city))
 
-    def mousePressEvent(self, event):
-        self.oldPos = event.globalPos()
+app = QApplication(sys.argv)
+appWindow = mainWindow()
+appWindow.show()
+sys.exit(app.exec_())
 
-    def mouseMoveEvent(self, event):
-        delta = QPoint (event.globalPos() - self.oldPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oldPos = event.globalPos()
-
-    def location_on_the_screen(self):
-        ag = QDesktopWidget().availableGeometry()
-        sg = QDesktopWidget().screenGeometry()
-
-        widget = self.geometry()
-        x = ag.width() - widget.width() - 50
-        y = 2 * ag.height() - sg.height() - widget.height() + 18
-        self.move(x, y)
-
-if __name__ == "__main__":
-    # Create an application object
-    app = QApplication(sys.argv)
-
-    #app.setStyle('Fusion')
-
-    # Create the Main Window object from FormWithTable Class and show it on the screen
-    appWindow = mainWindow()
-    appWindow.location_on_the_screen()
-    appWindow.show()  # This can also be included in the FormWithTable class
-    sys.exit(app.exec_())
-        
