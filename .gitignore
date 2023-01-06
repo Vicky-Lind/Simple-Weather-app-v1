@@ -6,5 +6,6 @@ config.ini
 
 # Ignore test.py
 test.py
+
 # Ignore randoms
 *.png
