@@ -1,16 +1,18 @@
 import sys
 from PyQt5.QtWidgets import * 
 from PyQt5.uic import loadUi
-from datetime import date
+from datetime import date, datetime
+from datetime import *
 from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtCore import QUrl, QPoint, Qt
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
 from PyQt5.QtGui import QMovie, QIcon, QPixmap
 from configparser import ConfigParser
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QEvent, QTimer
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QEvent, QTimer, QSize, QPoint, QRect, QThread, QUrl
 from PyQt5.QtGui import QKeyEvent, QMouseEvent, QWheelEvent
 from PyQt5.QtWidgets import QOpenGLWidget
-
+from pytz import timezone
+from timezonefinder import TimezoneFinder
 import requests
 
 url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
@@ -35,7 +37,7 @@ class mainWindow(QMainWindow):
         self.mainFrm = self.mainFrame
         # Does this even do anything?↓
         #self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.mainFrm.setStyleSheet("background-image: url('images/weather_test.png');")
+        self.mainFrm.setStyleSheet("background-image: url('images/testBG.png');")
 
         self.closeBtn = QPushButton(self)
         self.closeBtn.setIcon(QIcon('images/test-removebg.png'))
@@ -49,43 +51,65 @@ class mainWindow(QMainWindow):
         
         self.cityEntry = QLineEdit(self, text=self.cityText)
         self.cityEntry.setPlaceholderText("Enter city name")
+        # self.cityEntry.setStyleSheet("background-color: rgba(255, 255, 255, 60);")
+        # self.cityEntry.setStyleSheet("border-radius: 1px;")
+        # self.cityEntry.setStyleSheet("padding-left: 7px;")
         # self.cityEntry.setStyleSheet("background-color: red;")
-        self.cityEntry.setGeometry(10, 20, 150, 30)
+        self.cityEntry.setGeometry(10, 15, 150, 30)
+        self.cityEntry.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-left-radius: 10px; border-bottom-left-radius: 10px; padding-left: 5px; color: white; font-family: Arial; font-size: 12px;")
 
         self.searchBtn = QPushButton(self)
-        
-        self.searchBtn.setText("Search weather")
+        self.searchBtn.setIcon(QIcon('images/search-white-removebg.png'))
+        self.searchBtn.setIconSize(QtCore.QSize(20, 20))
+        self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
+        self.searchBtn.setGeometry(160, 15, 24, 30)
         self.searchBtn.clicked.connect(self.search)
         # self.searchBtn.setStyleSheet("background-color: red;")
-        self.searchBtn.setGeometry(170, 20, 12, 30)
+ 
     
         self.locationLbl = QLabel(self, text='')
-        self.locationLbl.setGeometry(10, 60, 200, 30)
+        self.locationLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
+        self.locationLbl.setGeometry(26, 45, 200, 30)
+
+        self.tempLbl = QLabel(self, text='')
+        self.tempLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 50px;")
+        self.tempLbl.setGeometry(10, 80, 200, 50)
 
         self.image = QLabel(self)
         self.image.setAlignment(QtCore.Qt.AlignCenter)
         self.image.setScaledContents(True)
-        self.image.setGeometry(10, 100, 50, 50)
+        self.image.setGeometry(10, 200, 50, 50)
 
-        self.tempLbl = QLabel(self, text='')
-        self.tempLbl.setGeometry(10, 310, 200, 30)
+
 
         self.weatherLbl = QLabel(self, text='')
+        self.weatherLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.weatherLbl.setGeometry(10, 340, 200, 30)
 
         self.feelsLikeLbl = QLabel(self, text='')
+        self.feelsLikeLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.feelsLikeLbl.setGeometry(10, 370, 200, 30)
 
         self.windLbl = QLabel(self, text='')
+        self.windLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.windLbl.setGeometry(10, 400, 200, 30)
 
         self.dragBarLbl = QLabel(self)
-        self.dragBarLbl.setStyleSheet("background-color: red;")
-        # self.dragBarLbl.setStyleSheet("background-color: rgba(255, 255, 255, 60);")
-        # self.dragBarLbl.setStyleSheet("border-radius: (17px);")
+        self.dragBarLbl.setStyleSheet("background-color: transparent;")
+        self.dragBarLbl.setMaximumSize(QSize(200, 15))
+        self.dragBarLbl.setMinimumSize(QSize(200, 15))
+
+        self.locationIcon = QLabel(self)
 
         self.drag_start_pos = None
+
+        self.timeLbl = QLabel(self, text='')
+        self.timeLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
+        self.timeLbl.setGeometry(10, 170, 200, 30)
+
         
+        # self.time.strftime('%H:%M')
+
     def get_weather(self, city):
         result = requests.get(url.format(city, api_key))
         # print(url.format(city, api_key))
@@ -101,12 +125,16 @@ class mainWindow(QMainWindow):
             wind = json['wind']['speed']
             icon = json['weather'][0]['icon']
             weather = json['weather'][0]['description']
-            final = (city, country, temp_celsius, feels_like, wind, icon, weather)
+            longitude = json['coord']['lon']
+            latitude = json['coord']['lat']
+
+
+            final = (city, country, temp_celsius, feels_like, wind, icon, weather, longitude, latitude)
             return final
         else:
             print("Error while getting weather data")
             return None
-        
+# TODO: ADD IF STATEMENT TO SEE IF FEELS-LIKE IS THE SAME AS TEMP, IF NOT THEN DONT SHOW?
     def search(self):
         city = self.cityEntry.text()
         weather = self.get_weather(city)
@@ -118,17 +146,34 @@ class mainWindow(QMainWindow):
         #     self.feelsLikeLbl.setText(str(weather[3]) + '°C')
         #     self.windLbl.setText(str(weather[4]) + 'km/h')
         if weather:
+            
+            self.locationIcon.setPixmap(QPixmap('images/location_v2_16x.png'))
+            self.locationIcon.setGeometry(10, 53, 16, 16)
+            self.locationIcon.setScaledContents(True)
+            self.locationIcon.setAlignment(QtCore.Qt.AlignCenter)
+            self.locationIcon.setStyleSheet("background-color: transparent;")
+
             self.locationLbl.setText('{}, {}'.format(weather[0], weather[1]))
+            
             pixmap = QPixmap('images/weather_icons_orig/{}.png'.format(weather[5]))  
             self.image.setPixmap(pixmap)
 
-            self.tempLbl.setText('{:.0f}°C'.format(weather[2]))
+            self.tempLbl.setText('{:.0f}°'.format(weather[2]))
             
-            self.feelsLikeLbl.setText('{:.0f}°C'.format(weather[3]))
+            self.feelsLikeLbl.setText('{:.0f}°'.format(weather[3]))
             
             self.windLbl.setText('{:.0f}km/h'.format(weather[4]))
 
             self.weatherLbl.setText(weather[6])
+
+            self.time = TimezoneFinder().timezone_at(lng=weather[7], lat=weather[8])
+            self.timeLbl.setText(self.time)
+            # print(self.time)
+            self.timezone = timezone(self.time)
+            self.time = datetime.now(self.timezone)
+            self.timeLbl.setText(self.time.strftime('%H:%M'))
+            # print(self.time.strftime('%H:%M'))
+
         else:
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
 
@@ -147,9 +192,10 @@ class mainWindow(QMainWindow):
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton:
             try:
-                self.move_pos = event.globalPos() - self.press_pos
-                self.move(self.pos() + self.move_pos)
-                self.press_pos = event.globalPos()
+                if self.dragBarLbl.geometry().contains(event.pos()):
+                    self.move_pos = event.globalPos() - self.press_pos
+                    self.move(self.pos() + self.move_pos)
+                    self.press_pos = event.globalPos()
             except Exception as error:
                 return None
 
