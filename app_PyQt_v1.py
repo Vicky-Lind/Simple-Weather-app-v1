@@ -1,21 +1,21 @@
 #################################################
 
-#------------------IMPORTS----------------------
-#-----sys-----
+#------------------IMPORTS----------------------#
+#-----sys-----#
 import sys
 
-#-----PyQt5-----
+#-----PyQt5-----#
 from PyQt5.QtWidgets import * 
 from PyQt5.uic import loadUi
 from PyQt5 import QtCore, Qt
 from PyQt5.QtCore import QPoint, Qt, QSize, QPoint
 from PyQt5.QtGui import QIcon, QPixmap
 
-#-----Other-----
+#-----Other-----#
 from configparser import ConfigParser
 import requests
 
-#-----Timezone-----
+#-----Timezone-----#
 from datetime import datetime
 from datetime import *
 from pytz import timezone
@@ -35,17 +35,20 @@ api_key = config['api_key']['key']
 
 #################################################
 
-#------------------------------------------------
+#---------------FULL-PROGRAM--------------------#
+
 class mainWindow(QMainWindow):
 
     def __init__(self):
         QMainWindow.__init__(self)
         loadUi('app_PyQt_v1.ui', self)
 
+#-------Makes window frameless-------#
         self.setWindowTitle('Weather App')
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
+#-------Introduce all UI elements----#
         self.mainFrm = self.mainFrame
         # Does this even do anything?↓
         # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -217,6 +220,14 @@ class mainWindow(QMainWindow):
 
         # self.time.strftime('%H:%M')
 
+#--------------------------------------------
+
+#################################################
+
+#-----------METHODS-----------#
+
+#------This fetches data from the API------#
+
     def get_weather(self, city):
         result = requests.get(url.format(city, api_key))
         # print(url.format(city, api_key))
@@ -240,7 +251,16 @@ class mainWindow(QMainWindow):
         else:
             print("Error while getting weather data")
             return None
-# TODO: ADD IF STATEMENT TO SEE IF FEELS-LIKE IS THE SAME AS TEMP, IF NOT THEN DONT SHOW?
+#------------------------------------------------
+
+#################################################
+
+#------Once city has been entered, it takes all data from ↑ and...
+#------...distributes it to the UI elements------#
+
+#------#TODO: ↓ ADD IF STATEMENT TO SEE IF FEELS-LIKE IS...
+#-------THE SAME AS TEMP, IF NOT THEN DONT SHOW?------#
+
     def search(self):
         city = self.cityEntry.text()
         weather = self.get_weather(city)
@@ -284,9 +304,15 @@ class mainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
     
-    # TODO: MAKE APP AUTO SHOW RAISIO WHEN STARTED
+#################################################
+
+#------This should eventually cause the app...
+#------to auto show Raisio when started------#
+#------------#TODO: MAKE APP AUTO SHOW RAISIO WHEN STARTED---#
     def autoShowRaisio(self):
         pass
+
+#################################################
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
