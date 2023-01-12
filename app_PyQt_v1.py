@@ -36,17 +36,23 @@ class mainWindow(QMainWindow):
 
         self.mainFrm = self.mainFrame
         # Does this even do anything?↓
-        #self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.mainFrm.setStyleSheet("background-image: url('images/testBG.png');")
+        # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.mainFrm.setStyleSheet("""
+            QFrame {
+                background-color: black;
+            }
+        """)
 
         self.closeBtn = QPushButton(self)
         self.closeBtn.setIcon(QIcon('images/test-removebg.png'))
         self.closeBtn.setIconSize(QtCore.QSize(20, 20))
-
-        self.closeBtn.setStyleSheet("background-color: transparent;")
         self.closeBtn.setGeometry(195, -5, 50, 30)
         self.closeBtn.clicked.connect(sys.exit)
-        
+        self.closeBtn.setStyleSheet("""
+            QPushButton {
+                background-color: transparent;
+            }
+        """)
         self.cityText = str()
         
         self.cityEntry = QLineEdit(self, text=self.cityText)
@@ -55,59 +61,117 @@ class mainWindow(QMainWindow):
         # self.cityEntry.setStyleSheet("border-radius: 1px;")
         # self.cityEntry.setStyleSheet("padding-left: 7px;")
         # self.cityEntry.setStyleSheet("background-color: red;")
-        self.cityEntry.setGeometry(10, 15, 150, 30)
-        self.cityEntry.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-left-radius: 10px; border-bottom-left-radius: 10px; padding-left: 5px; color: white; font-family: Arial; font-size: 12px;")
+        self.cityEntry.setGeometry(10, 15, 160, 30)
+        self.cityEntry.setStyleSheet("""
+            QLineEdit {
+                background-color: rgba(255, 255, 255, 60);
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+                padding-left: 5px;
+                padding-right: 5px;
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 14px;
+            }
+        """)
 
         self.searchBtn = QPushButton(self)
         self.searchBtn.setIcon(QIcon('images/search-white-removebg.png'))
         self.searchBtn.setIconSize(QtCore.QSize(20, 20))
-        self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
-        self.searchBtn.setGeometry(160, 15, 24, 30)
+        self.searchBtn.setGeometry(170, 15, 24, 30)
         self.searchBtn.clicked.connect(self.search)
-        # self.searchBtn.setStyleSheet("background-color: red;")
+        # self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
+        self.searchBtn.setStyleSheet("""
+            QPushButton {
+                background-color: rgba(255, 255, 255, 60);
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+            QPushButton:hover {
+                background-color: rgba(255, 255, 255, 80);
+            }
+        """)
  
-    
         self.locationLbl = QLabel(self, text='')
-        self.locationLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.locationLbl.setGeometry(26, 45, 200, 30)
+        self.locationLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 17px;
+            }
+        """)
 
         self.tempLbl = QLabel(self, text='')
-        self.tempLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 50px;")
         self.tempLbl.setGeometry(10, 80, 200, 50)
+        self.tempLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 50px;
+            }
+        """)
 
         self.image = QLabel(self)
         self.image.setAlignment(QtCore.Qt.AlignCenter)
         self.image.setScaledContents(True)
         self.image.setGeometry(10, 200, 50, 50)
 
-
-
         self.weatherLbl = QLabel(self, text='')
-        self.weatherLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.weatherLbl.setGeometry(10, 340, 200, 30)
+        self.weatherLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 17px;
+            }
+        """)
 
         self.feelsLikeLbl = QLabel(self, text='')
-        self.feelsLikeLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.feelsLikeLbl.setGeometry(10, 370, 200, 30)
+        self.feelsLikeLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 17px;
+            }
+        """)
 
         self.windLbl = QLabel(self, text='')
-        self.windLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.windLbl.setGeometry(10, 400, 200, 30)
+        self.windLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 17px;
+            }
+        """)
 
         self.dragBarLbl = QLabel(self)
-        self.dragBarLbl.setStyleSheet("background-color: transparent;")
         self.dragBarLbl.setMaximumSize(QSize(200, 15))
         self.dragBarLbl.setMinimumSize(QSize(200, 15))
+        self.dragBarLbl.setStyleSheet("""
+            QLabel {
+                background-color: transparent;
+            }
+        """)
 
         self.locationIcon = QLabel(self)
 
         self.drag_start_pos = None
 
         self.timeLbl = QLabel(self, text='')
-        self.timeLbl.setStyleSheet("color: white; font-family: Yu Gothic UI Light; font-size: 17px;")
         self.timeLbl.setGeometry(10, 170, 200, 30)
+        self.timeLbl.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-family: Yu Gothic UI Light;
+                font-size: 17px;
+            }
+        """)
 
-        
         # self.time.strftime('%H:%M')
 
     def get_weather(self, city):
@@ -127,7 +191,6 @@ class mainWindow(QMainWindow):
             weather = json['weather'][0]['description']
             longitude = json['coord']['lon']
             latitude = json['coord']['lat']
-
 
             final = (city, country, temp_celsius, feels_like, wind, icon, weather, longitude, latitude)
             return final
@@ -174,10 +237,9 @@ class mainWindow(QMainWindow):
             self.timeLbl.setText(self.time.strftime('%H:%M'))
             # print(self.time.strftime('%H:%M'))
 
+            QtCore.QTimer.singleShot(3000, self.search)
         else:
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
-
-    
     
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
