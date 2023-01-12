@@ -1,29 +1,41 @@
+#################################################
+
+#------------------IMPORTS----------------------
+#-----sys-----
 import sys
+
+#-----PyQt5-----
 from PyQt5.QtWidgets import * 
 from PyQt5.uic import loadUi
-from datetime import date, datetime
-from datetime import *
-from PyQt5 import QtWebEngineWidgets
-from PyQt5.QtCore import QUrl, QPoint, Qt
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
-from PyQt5.QtGui import QMovie, QIcon, QPixmap
+from PyQt5 import QtCore, Qt
+from PyQt5.QtCore import QPoint, Qt, QSize, QPoint
+from PyQt5.QtGui import QIcon, QPixmap
+
+#-----Other-----
 from configparser import ConfigParser
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt, QEvent, QTimer, QSize, QPoint, QRect, QThread, QUrl
-from PyQt5.QtGui import QKeyEvent, QMouseEvent, QWheelEvent
-from PyQt5.QtWidgets import QOpenGLWidget
-from pytz import timezone
-from timezonefinder import TimezoneFinder
 import requests
 
+#-----Timezone-----
+from datetime import datetime
+from datetime import *
+from pytz import timezone
+from timezonefinder import TimezoneFinder
+#------------------------------------------------
+
+#################################################
+
+#------------------------------------------------
 url = 'https://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
 
 config_file = 'config.ini'
 config = ConfigParser()
 config.read(config_file)
 api_key = config['api_key']['key']
+#------------------------------------------------
 
+#################################################
 
-
+#------------------------------------------------
 class mainWindow(QMainWindow):
 
     def __init__(self):
@@ -39,9 +51,40 @@ class mainWindow(QMainWindow):
         # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
         self.mainFrm.setStyleSheet("""
             QFrame {
-                background-color: black;
+                background-color: rgba(0, 0, 0, 100);
             }
         """)
+
+        self.bgLbl = QLabel(self)
+        # self.movie = QMovie('images/more_weather_icons/bg_portrait.gif')
+        # self.bgLbl.setMovie(self.movie)
+        # self.movie.setScaledSize(QSize(242, 449))
+        # self.movie.start()
+        self.bgLbl.setGeometry(0, 0, 242, 449)
+        self.bgLbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.bgLbl.setPixmap(QPixmap('images/more_weather_icons/bg_.png'))
+        self.bgLbl.setScaledContents(True)
+        self.bgLbl.setStyleSheet("""
+            QLabel {
+                background-color: transparent;
+                border-radius: 15px;
+            }
+        """)
+
+        # self.mainLbl = QLabel(self)
+        # self.mainLbl.setGeometry(10, 20, 220, 420)
+        # self.mainLbl.setAlignment(QtCore.Qt.AlignCenter)
+        
+        # #  # creating a blur effect
+        # # self.blur_effect = QGraphicsBlurEffect()
+        # # # adding blur effect to the label
+        # # self.mainLbl.setGraphicsEffect(self.blur_effect)
+        # self.mainLbl.setStyleSheet("""
+        #     QLabel {
+        #         background-color: rgba(255, 255, 255, 60);
+        #         border-radius: 15px;
+        #     }
+        # """)
 
         self.closeBtn = QPushButton(self)
         self.closeBtn.setIcon(QIcon('images/test-removebg.png'))
@@ -117,7 +160,7 @@ class mainWindow(QMainWindow):
         self.image = QLabel(self)
         self.image.setAlignment(QtCore.Qt.AlignCenter)
         self.image.setScaledContents(True)
-        self.image.setGeometry(10, 200, 50, 50)
+        self.image.setGeometry(80, 150, 120, 120)
 
         self.weatherLbl = QLabel(self, text='')
         self.weatherLbl.setGeometry(10, 340, 200, 30)
@@ -163,7 +206,7 @@ class mainWindow(QMainWindow):
         self.drag_start_pos = None
 
         self.timeLbl = QLabel(self, text='')
-        self.timeLbl.setGeometry(10, 170, 200, 30)
+        self.timeLbl.setGeometry(10, 220, 200, 30)
         self.timeLbl.setStyleSheet("""
             QLabel {
                 color: white;
@@ -218,7 +261,7 @@ class mainWindow(QMainWindow):
 
             self.locationLbl.setText('{}, {}'.format(weather[0], weather[1]))
             
-            pixmap = QPixmap('images/weather_icons_orig/{}.png'.format(weather[5]))  
+            pixmap = QPixmap('images/more_weather_icons/{}.png'.format(weather[5]))  
             self.image.setPixmap(pixmap)
 
             self.tempLbl.setText('{:.0f}°'.format(weather[2]))
@@ -241,6 +284,10 @@ class mainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
     
+    # TODO: MAKE APP AUTO SHOW RAISIO WHEN STARTED
+    def autoShowRaisio(self):
+        pass
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             try:
