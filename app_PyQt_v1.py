@@ -49,6 +49,8 @@ class mainWindow(QMainWindow):
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 #-------Introduce all UI elements----#
+
+#-------mainFrame---------#
         self.mainFrm = self.mainFrame
         # Does this even do anything?↓
         # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -58,6 +60,7 @@ class mainWindow(QMainWindow):
             }
         """)
 
+#-------mainFrame->bgLbl--#
         self.bgLbl = QLabel(self)
         # self.movie = QMovie('images/more_weather_icons/bg_portrait.gif')
         # self.bgLbl.setMovie(self.movie)
@@ -74,21 +77,26 @@ class mainWindow(QMainWindow):
             }
         """)
 
-        # self.mainLbl = QLabel(self)
-        # self.mainLbl.setGeometry(10, 20, 220, 420)
-        # self.mainLbl.setAlignment(QtCore.Qt.AlignCenter)
-        
-        # #  # creating a blur effect
-        # # self.blur_effect = QGraphicsBlurEffect()
-        # # # adding blur effect to the label
-        # # self.mainLbl.setGraphicsEffect(self.blur_effect)
-        # self.mainLbl.setStyleSheet("""
-        #     QLabel {
-        #         background-color: rgba(255, 255, 255, 60);
-        #         border-radius: 15px;
-        #     }
-        # """)
+#-------#TODO: fix the UI(make it better)-------------#
+#-----------→#TODO: add radius to bg pic, add the..
+#-----------..rest of the elements, add blur(?), etc.-
 
+        self.mainLbl = QLabel(self)
+        self.mainLbl.setGeometry(10, 20, 220, 420)
+        self.mainLbl.setAlignment(QtCore.Qt.AlignCenter)
+        
+        #  # creating a blur effect
+        # self.blur_effect = QGraphicsBlurEffect()
+        # # adding blur effect to the label
+        # self.mainLbl.setGraphicsEffect(self.blur_effect)
+        self.mainLbl.setStyleSheet("""
+            QLabel {
+                background-color: rgba(255, 255, 255, 60);
+                border-radius: 15px;
+            }
+        """)
+
+#-------mainFrame->closebtn--#
         self.closeBtn = QPushButton(self)
         self.closeBtn.setIcon(QIcon('images/test-removebg.png'))
         self.closeBtn.setIconSize(QtCore.QSize(20, 20))
@@ -99,46 +107,56 @@ class mainWindow(QMainWindow):
                 background-color: transparent;
             }
         """)
-        self.cityText = str()
         
-        self.cityEntry = QLineEdit(self, text=self.cityText)
-        self.cityEntry.setPlaceholderText("Enter city name")
-        # self.cityEntry.setStyleSheet("background-color: rgba(255, 255, 255, 60);")
-        # self.cityEntry.setStyleSheet("border-radius: 1px;")
-        # self.cityEntry.setStyleSheet("padding-left: 7px;")
-        # self.cityEntry.setStyleSheet("background-color: red;")
-        self.cityEntry.setGeometry(10, 15, 160, 30)
-        self.cityEntry.setStyleSheet("""
-            QLineEdit {
-                background-color: rgba(255, 255, 255, 60);
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
-                padding-left: 5px;
-                padding-right: 5px;
-                color: white;
-                font-family: Yu Gothic UI Light;
-                font-size: 14px;
-            }
-        """)
-
-        self.searchBtn = QPushButton(self)
-        self.searchBtn.setIcon(QIcon('images/search-white-removebg.png'))
-        self.searchBtn.setIconSize(QtCore.QSize(20, 20))
-        self.searchBtn.setGeometry(170, 15, 24, 30)
-        self.searchBtn.clicked.connect(self.search)
-        # self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
-        self.searchBtn.setStyleSheet("""
+#-------mainFrame->activate_search_button--#
+        self.activate_search_button = QPushButton(self)
+        self.activate_search_button.setIcon(QIcon('images/up_arrow.png'))
+        self.activate_search_button.setGeometry(90, 10, 60, 60)
+        self.activate_search_button.setStyleSheet("""
             QPushButton {
-                background-color: rgba(255, 255, 255, 60);
-                border-top-right-radius: 10px;
-                border-bottom-right-radius: 10px;
-                padding-right: 5px;
-                padding-left: 5px;
-            }
-            QPushButton:hover {
-                background-color: rgba(255, 255, 255, 80);
+                background-color: transparent;
             }
         """)
+        
+
+        # self.cityText = str()
+        # self.cityEntry = QLineEdit(self, text=self.cityText)
+        # self.cityEntry.setPlaceholderText("Enter city name")
+        # self.cityEntry.setGeometry(10, 15, 160, 30)
+        # self.cityEntry.setStyleSheet("""
+        #     QLineEdit {
+        #         background-color: rgba(255, 255, 255, 60);
+        #         border-top-left-radius: 10px;
+        #         border-bottom-left-radius: 10px;
+        #         padding-left: 5px;
+        #         padding-right: 5px;
+        #         color: white;
+        #         font-family: Yu Gothic UI Light;
+        #         font-size: 14px;
+        #     }
+        #     Active {
+        #         background-color: red;
+        #     }
+        # """)
+
+        # self.searchBtn = QPushButton(self)
+        # self.searchBtn.setIcon(QIcon('images/search-white-removebg.png'))
+        # self.searchBtn.setIconSize(QtCore.QSize(20, 20))
+        # self.searchBtn.setGeometry(170, 15, 24, 30)
+        # self.searchBtn.clicked.connect(self.search)
+        # # self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
+        # self.searchBtn.setStyleSheet("""
+        #     QPushButton {
+        #         background-color: rgba(255, 255, 255, 60);
+        #         border-top-right-radius: 10px;
+        #         border-bottom-right-radius: 10px;
+        #         padding-right: 5px;
+        #         padding-left: 5px;
+        #     }
+        #     QPushButton:hover {
+        #         background-color: rgba(255, 255, 255, 80);
+        #     }
+        # """)
  
         self.locationLbl = QLabel(self, text='')
         self.locationLbl.setGeometry(26, 45, 200, 30)
@@ -234,7 +252,7 @@ class mainWindow(QMainWindow):
         
         if result:
             json = result.json()
-            # (City, country, temp_celsius, icon, weather)
+        #(City, country, temp_celsius, feels_like, icon, weather, longitude, latitude)
             city = json['name']
             country = json['sys']['country']
             temp_kelvin = json['main']['temp']
@@ -259,20 +277,13 @@ class mainWindow(QMainWindow):
 #------...distributes it to the UI elements------#
 
 #------#TODO: ↓ ADD IF STATEMENT TO SEE IF FEELS-LIKE IS...
-#-------THE SAME AS TEMP, IF NOT THEN DONT SHOW?------#
+#-------THE SAME AS TEMP, IF YES, THEN DONT SHOW?------#
 
     def search(self):
         city = self.cityEntry.text()
         weather = self.get_weather(city)
-        # if weather:
-        #     location = weather[0] + ', ' + weather[1]
-        #     self.locationLbl.setText(location)
-        #     self.tempLbl.setText(str(weather[2]) + '°C')
-        #     self.weatherLbl.setText(weather[6])
-        #     self.feelsLikeLbl.setText(str(weather[3]) + '°C')
-        #     self.windLbl.setText(str(weather[4]) + 'km/h')
+  
         if weather:
-            
             self.locationIcon.setPixmap(QPixmap('images/location_v2_16x.png'))
             self.locationIcon.setGeometry(10, 53, 16, 16)
             self.locationIcon.setScaledContents(True)
@@ -304,6 +315,8 @@ class mainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, 'Error', "Cannot find city {}".format(city))
     
+#------------------------------------------------
+
 #################################################
 
 #------This should eventually cause the app...
@@ -311,9 +324,12 @@ class mainWindow(QMainWindow):
 #------------#TODO: MAKE APP AUTO SHOW RAISIO WHEN STARTED---#
     def autoShowRaisio(self):
         pass
+#------------------------------------------------
 
 #################################################
 
+#------These two make the window draggable------#
+#-------------#TODO: EXPLAIN HOW THEY WORK-------------#
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             try:
@@ -333,7 +349,12 @@ class mainWindow(QMainWindow):
                     self.press_pos = event.globalPos()
             except Exception as error:
                 return None
+#------------------------------------------------
 
+#################################################
+
+#------This makes the window open on the right side of the screen------#
+   
     def location_on_the_screen(self):
         ag = QDesktopWidget().availableGeometry()
         sg = QDesktopWidget().screenGeometry()
@@ -343,6 +364,11 @@ class mainWindow(QMainWindow):
         y = 2 * ag.height() - sg.height() - widget.height() + 18
         self.move(x, y)
 
+#------------------------------------------------
+
+#################################################
+
+#------Start app------#
 if __name__ == "__main__":
     # Create an application object
     app = QApplication(sys.argv)
@@ -352,6 +378,6 @@ if __name__ == "__main__":
     # Create the Main Window object from FormWithTable Class and show it on the screen
     appWindow = mainWindow()
     appWindow.location_on_the_screen()
-    appWindow.show()  # This can also be included in the FormWithTable class
+    appWindow.show()
     sys.exit(app.exec_())
         
