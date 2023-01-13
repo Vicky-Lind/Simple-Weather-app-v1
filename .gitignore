@@ -6,6 +6,7 @@ config.ini
 
 # Ignore test.py
 test.py
+app_tkinter_v1.py
 
 # Ignore randoms
 *.png
