@@ -5,9 +5,9 @@ weather_icons/
 config.ini
 
 # Ignore test.py
-.test.py
+test.py
 # Ignore tkinter.py
-.app_tkinter_v1.py
+app_tkinter_v1.py
 
 # Ignore randoms
 *.png
