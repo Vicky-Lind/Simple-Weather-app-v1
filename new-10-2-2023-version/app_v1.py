@@ -41,7 +41,7 @@ class mainWindow(QMainWindow):
 
     def __init__(self):
         QMainWindow.__init__(self)
-        loadUi('app_PyQt_v1.ui', self)
+        loadUi('new-10-2-2023-version/app_v1.ui', self)
 
 #-------Makes window frameless-------#
         self.setWindowTitle('Weather App')
@@ -56,7 +56,7 @@ class mainWindow(QMainWindow):
         # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
         self.mainFrm.setStyleSheet("""
             QFrame {
-                background-color: transparent;
+                background-color: rgba(0, 0, 0, 100);
             }
         """)
 
