@@ -10,7 +10,11 @@ from PyQt5.uic import loadUi
 from PyQt5 import QtCore
 from PyQt5.QtCore import QPoint, QSize, QPoint
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QMovie
+from PyQt5.QtGui import QPalette, QColor, QBrush, QLinearGradient, QGradient, QPainter
+from PyQt5.QtGui import QPalette, QColor, QBrush, QLinearGradient, QGradient, QPainter, QMovie
 
+from PyQt5.QtGui import QKeySequence
 #-----Other-----#
 from configparser import ConfigParser
 import requests
@@ -43,6 +47,7 @@ class mainWindow(QMainWindow):
         QMainWindow.__init__(self)
         loadUi('new-10-2-2023-version/app_v1.ui', self)
 
+        self.setParent(None)
 #-------Makes window frameless-------#
         self.setWindowTitle('Weather App')
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
@@ -54,14 +59,24 @@ class mainWindow(QMainWindow):
         self.mainFrm = self.mainFrame
         # Does this even do anything?↓
         # self.mainFrm.setFrameShadow(QtWidgets.QFrame.Raised)
+
+        #Make the frame have a modern, gradient background
         self.mainFrm.setStyleSheet("""
             QFrame {
-                background-color: rgba(0, 0, 0, 100);
+                background-color: rgba(151, 190, 252, 100);
+                border-radius: 15px;
             }
         """)
 
 #-------mainFrame->bgLbl--#
-        self.bgLbl = QLabel(self)
+        # self.bgLbl = QLabel(self)
+        # self.movie = QMovie("bg_test.gif")
+        # self.movie.frameChanged.connect(self.repaint)
+        # self.movie.setScaledSize(QSize(242, 449))
+        # self.bgLbl.setMovie(self.movie)
+        # self.movie.start()
+        # self.bgLbl.setGeometry(0, 0, 242, 449)
+        # self.bgLbl.setAlignment(QtCore.Qt.AlignCenter)
         # self.movie = QMovie('images/more_weather_icons/bg_portrait.gif')
         # self.bgLbl.setMovie(self.movie)
         # self.movie.setScaledSize(QSize(242, 449))
@@ -91,7 +106,7 @@ class mainWindow(QMainWindow):
         # self.mainLbl.setGraphicsEffect(self.blur_effect)
         self.mainLbl.setStyleSheet("""
             QLabel {
-                background-color: rgba(255, 255, 255, 60);
+                background-color: rgba(255, 255, 255, 80);
                 border-radius: 15px;
             }
         """)
@@ -109,20 +124,20 @@ class mainWindow(QMainWindow):
         """)
         
 #-------mainFrame->activate_search_button--#
-        self.activate_search_button = QPushButton(self)
-        self.activate_search_button.setIcon(QIcon('images/up_arrow.png'))
-        self.activate_search_button.setGeometry(90, 10, 60, 60)
-        self.activate_search_button.setStyleSheet("""
-            QPushButton {
-                background-color: transparent;
-            }
-        """)
+        # self.activate_search_button = QPushButton(self)
+        # self.activate_search_button.setIcon(QIcon('images/up_arrow.png'))
+        # self.activate_search_button.setGeometry(90, 60, 60, 60)
+        # self.activate_search_button.setStyleSheet("""
+        #     QPushButton {
+        #         background-color: transparent;
+        #     }
+        # """)
         
 
         self.cityText = str()
         self.cityEntry = QLineEdit(self, text=self.cityText)
         self.cityEntry.setPlaceholderText("Enter city name")
-        self.cityEntry.setGeometry(10, 15, 160, 30)
+        self.cityEntry.setGeometry(10, 19, 160, 30)
         self.cityEntry.setStyleSheet("""
             QLineEdit {
                 background-color: rgba(255, 255, 255, 60);
@@ -144,6 +159,10 @@ class mainWindow(QMainWindow):
         self.searchBtn.setIconSize(QtCore.QSize(20, 20))
         self.searchBtn.setGeometry(170, 15, 24, 30)
         self.searchBtn.clicked.connect(self.search)
+
+        self.shortcut = QShortcut(QKeySequence("Shift+Enter"), self)
+        self.shortcut.activated.connect(self.search)
+
         # self.searchBtn.setStyleSheet("background-color: rgba(255, 255, 255, 60); border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding-right: 5px;")
         self.searchBtn.setStyleSheet("""
             QPushButton {
@@ -243,6 +262,13 @@ class mainWindow(QMainWindow):
 #################################################
 
 #-----------METHODS-----------#
+    # def paintEvent(self, event):
+    #     currentFrame = self.movie.currentPixmap()
+    #     frameRect = currentFrame.rect()
+    #     frameRect.moveCenter(self.rect().center())
+    #     if frameRect.intersects(event.rect()):
+    #         painter = QPainter(self)
+    #         painter.drawPixmap(frameRect.left(), frameRect.top(), currentFrame)
 
 #------This fetches data from the API------#
 
@@ -372,6 +398,10 @@ class mainWindow(QMainWindow):
         self.move(x, y)
 
 #------------------------------------------------
+    def closeEvent(self, event):
+        event.accept()
+        QApplication.quit()
+        sys.exit()
 
 #################################################
 
