@@ -12,3 +12,9 @@ app_tkinter_v1.py
 # Ignore randoms
 *.png
 *.jpg
+
+*.spec
+
+build/
+dist/
+venv/
