@@ -6685,4 +6685,10 @@
    'DATA'),
   ('setuptools-65.5.0.dist-info\\WHEEL',
    'c:\\users\\administrator\\documents\\github\\weather-app\\venv\\lib\\site-packages\\setuptools-65.5.0.dist-info\\WHEEL',
+   'DATA'),
+  ('app_PyQt_v1.ui',
+   'C:\\Users\\Administrator\\Documents\\GitHub\\Weather-app\\app_PyQt_v1.ui',
+   'DATA'),
+  ('config.ini',
+   'C:\\Users\\Administrator\\Documents\\GitHub\\Weather-app\\config.ini',
    'DATA')],)
