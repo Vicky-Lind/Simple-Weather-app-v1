@@ -10,6 +10,8 @@ from PyQt5.uic import loadUi
 from PyQt5 import QtCore, Qt
 from PyQt5.QtCore import QPoint, Qt, QSize, QPoint
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QMovie, QPalette, QBrush, QColor, QFont, QCursor
+
 
 #-----Other-----#
 from configparser import ConfigParser
@@ -373,7 +375,22 @@ class mainWindow(QMainWindow):
 
 #------------------------------------------------
 
+    #if clicked outside of the window, it closes
+    # def close(self, event):
+    #     if event.button() == Qt.LeftButton:
+    #         try:
+    #             if self.mainFrm.geometry().contains(event.pos()):
+    #                 pass
+    #             else:
+    #                 sys.exit(QApplication.exec_())
+    #         except Exception as error:
+    #             print(error)
+    #             return None
+            
 #################################################
+#make app automatically show the last city searched when opened
+    def autoShowLastCity(self):
+        pass
 
 #------Start app------#
 if __name__ == "__main__":
@@ -386,5 +403,6 @@ if __name__ == "__main__":
     appWindow = mainWindow()
     appWindow.location_on_the_screen()
     appWindow.show()
+    # appWindow.close(appWindow)
     sys.exit(app.exec_())
         
