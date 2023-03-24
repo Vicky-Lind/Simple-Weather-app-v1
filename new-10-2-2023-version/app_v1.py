@@ -106,12 +106,7 @@ class mainWindow(QMainWindow):
         # self.blur_effect = QGraphicsBlurEffect()
         # # adding blur effect to the label
         # self.mainLbl.setGraphicsEffect(self.blur_effect)
-        self.mainLbl.setStyleSheet("""
-            QLabel {
-                border-radius: 15px;
-                background-color: rgb(255, 255, 255, 125)
-            }
-        """)
+        
 
 #-------mainFrame->closebtn--#
         self.closeBtn = QPushButton(self)
@@ -323,6 +318,12 @@ class mainWindow(QMainWindow):
             weather = self.get_weather(city)
     
             if weather:
+                self.mainLbl.setStyleSheet("""
+                    QLabel {
+                        border-radius: 15px;
+                        background-color: rgb(255, 255, 255, 125)
+                    }
+                """)
                 self.locationIcon.setPixmap(QPixmap('images/locationImage.png'))
                 self.locationIcon.setGeometry(67, 65, 13, 13)
                 self.locationIcon.setScaledContents(True)
